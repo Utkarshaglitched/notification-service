@@ -1,1 +1,2 @@
 .env
+db_methods/__pycache__/*

@@ -25,5 +25,4 @@ class NotificationQueue(Base):
     notification_type: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column()
     status: Mapped[str] = mapped_column()
-
-    
+    msg:Mapped[str]=mapped_column()

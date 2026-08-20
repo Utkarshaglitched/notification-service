@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Request
 from fastapi.templating import Jinja2Templates
 from models import orders,notification
-from db_methods.database_handler import add_into
+from db_methods.database_handler import read_all
 
 app=FastAPI()
 
@@ -21,7 +21,7 @@ def inbox(request:Request):
 
     return templates.TemplateResponse(
         request,
-        "order.html"
+        "inbox.html"
     )
 
 
@@ -40,14 +40,25 @@ def handel_orders(recv:orders):
     else:
         print("Storage failed!!")
         return {
-            "code":200,
+            "code":400,
             "message":"unexpected Error occured!!"
         }
 
 
-@app.post("/notification/{id}")
+@app.get("/notification/{id}")
 def handel_notification(id:str):
-    pass
 
+    res=read_all(id)
+
+    if res.get("code")==200:
+        return {
+            "messaage": res.get("msg"),
+            "code":200
+        }
+    else:
+        return {
+            "message":"There is some issue",
+            "code":400
+        }
 
 

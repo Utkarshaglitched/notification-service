@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Notification Inbox | Notification Service</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --bg-card-hover: #263346;
+            --accent-primary: #6366f1;
+            --accent-primary-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.25);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.25);
+            --accent-amber: #f59e0b;
+            --accent-amber-glow: rgba(245, 158, 11, 0.25);
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --text-dim: #6b7280;
+            --border-color: #374151;
+            --code-bg: #0d1117;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .header-badges {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.25rem 0.75rem;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-card);
+            color: var(--text-main);
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--accent-glow);
+        }
+
+        /* Order ID Filter Card */
+        .filter-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .order-input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.65rem 1rem;
+            color: var(--text-main);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .order-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .btn-watch {
+            padding: 0.65rem 1.25rem;
+            background: var(--accent-primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-watch:hover {
+            background: var(--accent-primary-hover);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .btn-watch:active {
+            transform: scale(0.98);
+        }
+
+        .polling-status-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Layout Split: Sidebar Stats + Main Inbox */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar Status Panel */
+        .sidebar-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .panel-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stat-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .stat-val-code {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-primary);
+        }
+
+        /* Main Inbox Feed */
+        .inbox-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Empty State */
+        .empty-inbox {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .empty-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-desc {
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Email / Notification Card */
+        .notification-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideIn 0.4s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+                border-color: var(--accent-primary);
+                box-shadow: 0 0 20px var(--accent-glow);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-card.is-new {
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 18px var(--accent-glow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .order-product-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        .product-icon-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 0.375rem;
+            background: rgba(99, 102, 241, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-badges {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-type {
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .badge-ORDER_PLACED {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .badge-DISPATCHED {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-OUT_FOR_DELIVERY {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-DELIVERED {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-new-tag {
+            background: var(--accent-green);
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.15rem 0.45rem;
+            border-radius: 0.25rem;
+            letter-spacing: 0.05em;
+            animation: pulse-new 2s infinite alternate;
+        }
+
+        @keyframes pulse-new {
+            from { opacity: 0.8; }
+            to { opacity: 1; transform: scale(1.05); }
+        }
+
+        .card-message-body {
+            background: var(--code-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            color: #e5e7eb;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-family: 'Fira Code', monospace;
+            padding-top: 0.25rem;
+        }
+
+        .status-sent-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        /* Section Architecture Diagram */
+        .architecture-section {
+            margin-top: 3rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .arch-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+
+        .arch-node {
+            padding: 0.4rem 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .arch-node.active-node {
+            border-color: var(--accent-primary);
+            color: #818cf8;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .arch-arrow {
+            color: var(--text-dim);
+        }
+
+        .arch-desc {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-title-area">
+                <div class="header-badges">
+                    <div class="badge-tag">
+                        <span class="pulse-dot" style="background-color: var(--accent-primary);"></span> Async Queue Consumer
+                    </div>
+                    <div class="badge-tag badge-live">
+                        <span class="pulse-dot"></span> LIVE POLLING
+                    </div>
+                </div>
+                <h1>📬 Simulated Live Notification Inbox</h1>
+                <p class="subtitle">Watch notifications arrive as the backend worker processes them.</p>
+            </div>
+            <div>
+                <a href="/" class="nav-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    ← Order Simulator
+                </a>
+            </div>
+        </header>
+
+        <!-- Order ID Filter Section -->
+        <section class="filter-card">
+            <div class="filter-controls">
+                <div class="filter-label">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Order ID Filter
+                </div>
+                <div class="input-group">
+                    <input type="number" id="order-id-input" class="order-input" placeholder="Enter Order ID (e.g. 1024)" onkeypress="if(event.key==='Enter') startWatchingOrder()">
+                    <button class="btn-watch" onclick="startWatchingOrder()">
+                        Watch Order
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="polling-status-text" id="polling-status-bar">
+                <div class="spinner"></div>
+                <span id="polling-status-msg">Enter an Order ID above to begin watching live notifications...</span>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Split Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar / Status Panel -->
+            <aside class="sidebar-panel">
+                <div class="panel-title">Notification Service</div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Backend Connection</div>
+                    <div class="stat-val" style="color: var(--accent-green)">
+                        <span class="pulse-dot"></span> Connected
+                    </div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Polling Interval</div>
+                    <div class="stat-val stat-val-code">Every 2 seconds</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Order Being Watched</div>
+                    <div class="stat-val stat-val-code" id="stat-watched-id">#None</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Notifications Received</div>
+                    <div class="stat-val" id="stat-count">0</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">Worker Status</div>
+                    <div class="stat-val" id="stat-worker-label" style="color: var(--accent-amber)">
+                        Waiting for order...
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Inbox Feed Area -->
+            <main class="inbox-feed" id="inbox-container">
+                <div class="empty-inbox" id="empty-inbox-view">
+                    <div class="empty-icon">📭</div>
+                    <div class="empty-title">No notifications yet</div>
+                    <div class="empty-desc">
+                        Place an order from the simulator and watch your backend notifications arrive here in real-time.
+                    </div>
+                    <a href="/" class="nav-btn" style="display: inline-flex;">
+                        Open Order Simulator
+                    </a>
+                </div>
+            </main>
+        </div>
+
+        <!-- Architecture Diagram & Explanation -->
+        <section class="architecture-section">
+            <div class="arch-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Backend Notification Lifecycle Pipeline
+            </div>
+
+            <div class="arch-flow">
+                <div class="arch-node">Order Simulator</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node active-node">POST /orders</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">PostgreSQL Queue</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node active-node">Worker</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node">PROCESSING</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node" style="color: var(--accent-green);">SENT</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node active-node">GET /notification/{id}</div>
+                <div class="arch-arrow">→</div>
+                <div class="arch-node" style="color: #818cf8">Inbox</div>
+            </div>
+
+            <p class="arch-desc">
+                <strong>How this works:</strong> Orders are added to the backend notification queue table. Background Python workers poll and process queued notifications (updating status from <code>pending</code> → <code>processing</code> → <code>sent</code>). Once a notification is marked as <strong>sent</strong>, this inbox retrieves it through the notification API.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        Notification Inbox Simulator &bull; Async Queue Architecture Demo &bull; FastAPI + SQLite/PostgreSQL
+    </footer>
+
+    <script>
+        // Track state
+        let currentWatchedOrderId = null;
+        let pollingTimerId = null;
+        const displayedNotificationKeys = new Set();
+        let totalReceivedCount = 0;
+
+        // On page load: check URL query params (e.g. ?order_id=1024)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryOrderId = urlParams.get('order_id');
+            if (queryOrderId) {
+                document.getElementById('order-id-input').value = queryOrderId;
+                startWatchingOrder();
+            }
+        });
+
+        // Trigger watching an Order ID
+        function startWatchingOrder() {
+            const inputVal = document.getElementById('order-id-input').value.trim();
+            if (!inputVal) {
+                updateStatusText('Please enter a valid Order ID to watch.', 'error');
+                return;
+            }
+
+            const orderId = parseInt(inputVal);
+            if (isNaN(orderId)) {
+                updateStatusText('Order ID must be a numeric integer.', 'error');
+                return;
+            }
+
+            // Reset polling if changing order ID
+            if (pollingTimerId) {
+                clearInterval(pollingTimerId);
+                pollingTimerId = null;
+            }
+
+            currentWatchedOrderId = orderId;
+            document.getElementById('stat-watched-id').textContent = `#${orderId}`;
+            document.getElementById('stat-worker-label').textContent = 'Waiting for worker...';
+            document.getElementById('stat-worker-label').style.color = 'var(--accent-amber)';
+
+            updateStatusText(`Polling order #${orderId}...`, 'polling');
+
+            // Immediately poll once, then schedule every 2000 ms
+            fetchNotificationsForOrder(orderId);
+            pollingTimerId = setInterval(() => {
+                fetchNotificationsForOrder(orderId);
+            }, 2000);
+        }
+
+        // Update polling status bar
+        function updateStatusText(text, state = 'polling') {
+            const msgEl = document.getElementById('polling-status-msg');
+            const barEl = document.getElementById('polling-status-bar');
+            
+            if (msgEl) msgEl.textContent = text;
+            
+            if (barEl) {
+                const spinner = barEl.querySelector('.spinner');
+                if (state === 'polling') {
+                    if (spinner) spinner.style.display = 'inline-block';
+                    barEl.style.color = 'var(--text-muted)';
+                } else if (state === 'error') {
+                    if (spinner) spinner.style.display = 'none';
+                    barEl.style.color = 'var(--accent-red)';
+                } else if (state === 'waiting') {
+                    if (spinner) spinner.style.display = 'inline-block';
+                    barEl.style.color = 'var(--accent-amber)';
+                } else if (state === 'success') {
+                    if (spinner) spinner.style.display = 'inline-block';
+                    barEl.style.color = 'var(--accent-green)';
+                }
+            }
+        }
+
+        // Detect notification type from payload or message text
+        function detectNotificationType(data) {
+            if (data.notification_type) return data.notification_type;
+
+            const msg = (data.msg || data.messaage || data.message || '').toUpperCase();
+            if (msg.includes('DELIVERED')) return 'DELIVERED';
+            if (msg.includes('OUT FOR DELIVERY') || msg.includes('OUT_FOR_DELIVERY')) return 'OUT_FOR_DELIVERY';
+            if (msg.includes('DISPATCHED')) return 'DISPATCHED';
+            if (msg.includes('PLACED') || msg.includes('ORDER')) return 'ORDER_PLACED';
+
+            return 'NOTIFICATION';
+        }
+
+        // Map notification type to icon
+        function getIconForType(typeKey) {
+            switch (typeKey) {
+                case 'ORDER_PLACED': return '🛒';
+                case 'DISPATCHED': return '📦';
+                case 'OUT_FOR_DELIVERY': return '🚚';
+                case 'DELIVERED': return '✅';
+                default: return '📩';
+            }
+        }
+
+        // Fetch notifications from FastAPI GET /notification/{id}
+        async function fetchNotificationsForOrder(orderId) {
+            try {
+                const response = await fetch(`/notification/${orderId}`);
+                
+                if (!response.ok) {
+                    updateStatusText(`Unable to reach notification service (HTTP ${response.status})`, 'error');
+                    return;
+                }
+
+                const data = await response.json();
+
+                // If backend returns code != 200, treat as "no notification available yet"
+                if (!data || data.code !== 200) {
+                    if (displayedNotificationKeys.size === 0) {
+                        updateStatusText(`Waiting for notifications for order #${orderId}...`, 'waiting');
+                    } else {
+                        updateStatusText(`Polling order #${orderId}...`, 'polling');
+                    }
+                    return;
+                }
+
+                // If single object returned or list returned, normalize to array
+                const notificationsList = Array.isArray(data) ? data : [data];
+
+                let hasNewNotification = false;
+
+                notificationsList.forEach(item => {
+                    // Generate unique key for deduplication
+                    const msgText = item.msg || item.messaage || item.message || '';
+                    const itemKey = item.id ? `id-${item.id}` : `msg-${orderId}-${msgText}`;
+
+                    if (!displayedNotificationKeys.has(itemKey)) {
+                        displayedNotificationKeys.add(itemKey);
+                        renderNotificationCard(orderId, item);
+                        hasNewNotification = true;
+                        totalReceivedCount++;
+                    }
+                });
+
+                if (hasNewNotification) {
+                    document.getElementById('stat-count').textContent = totalReceivedCount;
+                    document.getElementById('stat-worker-label').textContent = 'Notification Received!';
+                    document.getElementById('stat-worker-label').style.color = 'var(--accent-green)';
+                    updateStatusText(`Active - Received notification for order #${orderId}`, 'success');
+                } else {
+                    updateStatusText(`Polling order #${orderId}... (${displayedNotificationKeys.size} received)`, 'polling');
+                }
+
+            } catch (err) {
+                console.error('Fetch notification error:', err);
+                updateStatusText('Unable to reach notification service', 'error');
+                document.getElementById('stat-worker-label').textContent = 'Service Offline';
+                document.getElementById('stat-worker-label').style.color = 'var(--accent-red)';
+            }
+        }
+
+        // Render email / notification card into inbox
+        function renderNotificationCard(orderId, item) {
+            const container = document.getElementById('inbox-container');
+            const emptyView = document.getElementById('empty-inbox-view');
+
+            if (emptyView) emptyView.style.display = 'none';
+
+            const notifType = detectNotificationType(item);
+            const icon = getIconForType(notifType);
+            const msgBody = item.msg || item.messaage || item.message || `Notification event processed for order #${orderId}`;
+            const productName = item.product || 'Order';
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            const card = document.createElement('div');
+            card.className = 'notification-card is-new';
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="order-product-title">
+                        <div class="product-icon-badge">${icon}</div>
+                        <div>
+                            <span>Order #${orderId}</span>
+                            <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;"> &bull; ${productName}</span>
+                        </div>
+                    </div>
+                    <div class="card-badges">
+                        <span class="badge-type badge-${notifType}">${notifType.replace(/_/g, ' ')}</span>
+                        <span class="badge-new-tag">NEW</span>
+                    </div>
+                </div>
+
+                <div class="card-message-body">
+                    ${msgBody}
+                </div>
+
+                <div class="card-footer">
+                    <span class="status-sent-indicator">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        STATUS: SENT
+                    </span>
+                    <span>Received at ${timeStr}</span>
+                </div>
+            `;
+
+            container.prepend(card);
+
+            // Fade out "is-new" highlight border after 4 seconds
+            setTimeout(() => {
+                card.classList.remove('is-new');
+                const newTag = card.querySelector('.badge-new-tag');
+                if (newTag) newTag.style.display = 'none';
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
