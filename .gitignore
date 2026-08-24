@@ -1,2 +1,4 @@
 .env
 db_methods/__pycache__/*
+__pycache__/*
+workers/__pycache__/*
