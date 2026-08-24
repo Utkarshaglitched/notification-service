@@ -36,9 +36,9 @@ def process(eve):
                     msg=f"your {product} with order id: {det.get('order_id')} is delivered!!"
                     sms_status=modify_sms(id,msg)
 
-            st=modify_status(id,"sent")
-            if sms_status and st:
-                print("Notification modified in the db")
+                st=modify_status(id,"sent")
+                if sms_status and st:
+                    print("Notification modified in the db")
 
 
 

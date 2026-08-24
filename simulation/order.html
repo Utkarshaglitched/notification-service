@@ -6,148 +6,90 @@
     <title>Order Simulator | Notification Service</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-card: #1f2937;
-            --bg-card-hover: #263346;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-sub: #334155;
+            --border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
             --accent-primary: #6366f1;
-            --accent-primary-hover: #4f46e5;
-            --accent-glow: rgba(99, 102, 241, 0.25);
             --accent-green: #10b981;
-            --accent-green-glow: rgba(16, 185, 129, 0.25);
             --accent-amber: #f59e0b;
-            --accent-amber-glow: rgba(245, 158, 11, 0.25);
             --accent-red: #ef4444;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --text-dim: #6b7280;
-            --border-color: #374151;
-            --border-glow: rgba(99, 102, 241, 0.4);
-            --code-bg: #0d1117;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
-            background-color: var(--bg-primary);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             line-height: 1.5;
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
         }
 
-        /* Container */
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
             width: 100%;
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
             margin-bottom: 2rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .header-title-area {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
+        .header-title-area { display: flex; flex-direction: column; gap: 0.25rem; }
 
         .badge-tag {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.25rem 0.75rem;
-            background: rgba(99, 102, 241, 0.12);
+            padding: 0.2rem 0.6rem;
+            background: rgba(99, 102, 241, 0.15);
             border: 1px solid rgba(99, 102, 241, 0.3);
             color: #818cf8;
             font-size: 0.75rem;
             font-weight: 600;
-            border-radius: 9999px;
+            border-radius: 4px;
             width: fit-content;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .badge-tag span.pulse-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--accent-green);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-green);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+        h1 { font-size: 1.85rem; font-weight: 700; color: var(--text-main); }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; }
 
         .nav-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
+            padding: 0.6rem 1.1rem;
             background: var(--bg-card);
             color: var(--text-main);
             text-decoration: none;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             border-radius: 0.5rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-size: 0.875rem;
+            transition: background 0.2s, border-color 0.2s;
         }
 
-        .nav-btn:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-primary);
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px var(--accent-glow);
-        }
+        .nav-btn:hover { background: var(--bg-sub); border-color: var(--accent-primary); }
 
-        /* Settings Card */
         .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-main);
             margin-bottom: 0.75rem;
             display: flex;
@@ -156,151 +98,85 @@
         }
 
         .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         .settings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.25rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
         }
 
         .setting-item {
-            background: var(--bg-card);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.6);
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .setting-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--text-muted);
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .setting-value {
-            color: var(--accent-primary);
-            font-family: 'Fira Code', monospace;
-            font-weight: 600;
-        }
+        .setting-value { color: var(--accent-primary); font-family: 'Fira Code', monospace; font-weight: 600; }
+        .setting-item input[type="range"] { width: 100%; accent-color: var(--accent-primary); cursor: pointer; }
 
-        .setting-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .setting-input {
-            width: 100%;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.375rem;
-            padding: 0.5rem 0.75rem;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            font-family: 'Fira Code', monospace;
-            transition: border-color 0.2s;
-        }
-
-        .setting-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 2px var(--accent-glow);
-        }
-
-        .settings-info {
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            background: rgba(99, 102, 241, 0.08);
-            border-left: 3px solid var(--accent-primary);
-            border-radius: 0 0.375rem 0.375rem 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* Products Grid */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .product-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
             padding: 1.25rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.25 ease;
-            position: relative;
-            overflow: hidden;
+            gap: 1rem;
         }
 
-        .product-card:hover {
-            border-color: var(--border-glow);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.4);
-        }
-
-        .product-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 0.5rem;
-            background: rgba(99, 102, 241, 0.12);
-            color: var(--accent-primary);
+        .product-icon-wrap {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 0.375rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
         }
 
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.35rem;
-        }
-
-        .product-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1.25rem;
-            min-height: 2.55rem;
-        }
+        .product-name { font-size: 1rem; font-weight: 600; color: var(--text-main); }
+        .product-desc { font-size: 0.825rem; color: var(--text-muted); margin-top: 0.25rem; }
 
         .product-footer {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: auto;
+            justify-content: space-between;
             padding-top: 0.75rem;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--text-main);
-            font-family: 'Fira Code', monospace;
-        }
+        .product-price { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
 
         .btn-order {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.9rem;
             background: var(--accent-primary);
             color: #ffffff;
             border: none;
@@ -308,25 +184,13 @@
             font-weight: 600;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.4rem;
+            transition: background 0.2s;
         }
 
-        .btn-order:hover {
-            background: var(--accent-primary-hover);
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .btn-order:active {
-            transform: scale(0.97);
-        }
-
-        /* Active Orders Section */
-        .orders-section {
-            margin-top: 1rem;
-        }
+        .btn-order:hover { background: #4f46e5; }
 
         .orders-header {
             display: flex;
@@ -336,267 +200,112 @@
         }
 
         .orders-count-badge {
-            background: var(--bg-card);
-            padding: 0.2rem 0.6rem;
-            border-radius: 9999px;
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--accent-primary);
-            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            background: var(--bg-sub);
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
         }
 
+        .orders-container { display: flex; flex-direction: column; gap: 1rem; }
+
         .empty-orders {
-            background: var(--bg-secondary);
-            border: 2px dashed var(--border-color);
-            border-radius: 0.75rem;
-            padding: 3rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: 0.5rem;
+            padding: 2.5rem 1rem;
             text-align: center;
             color: var(--text-muted);
         }
 
-        .empty-orders-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            opacity: 0.6;
-        }
-
-        .orders-container {
+        .order-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        /* Order Item Card */
-        .order-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            transition: border-color 0.3s ease;
-            position: relative;
-        }
-
-        .order-card.active-processing {
-            border-color: rgba(99, 102, 241, 0.5);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .order-card.completed {
-            border-color: rgba(16, 185, 129, 0.4);
+            gap: 1rem;
         }
 
         .order-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
         }
 
-        .order-meta-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
-
-        .order-id-tag {
-            font-family: 'Fira Code', monospace;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-main);
-        }
-
-        .order-product-name {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
+        .order-id-tag { font-family: 'Fira Code', monospace; font-weight: 600; font-size: 0.9rem; color: var(--accent-primary); }
+        .order-product-name { font-size: 0.875rem; color: var(--text-muted); }
 
         .order-status-badge {
-            padding: 0.3rem 0.75rem;
-            border-radius: 0.375rem;
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
         }
 
-        .status-placed {
-            background: rgba(99, 102, 241, 0.15);
-            color: #818cf8;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
+        .status-placed { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+        .status-dispatched { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .status-out { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .status-delivered { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-error { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-        .status-dispatched {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .status-out {
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-
-        .status-delivered {
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .status-error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        /* Vertical Timeline */
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            margin: 1rem 0;
-            padding-left: 0.5rem;
-        }
+        .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; }
 
         .timeline-item {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
             display: flex;
-            position: relative;
-            padding-bottom: 1.5rem;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0.5;
+            transition: opacity 0.2s, border-color 0.2s;
         }
 
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        /* Vertical line connector */
-        .timeline-item:not(:last-child)::before {
-            content: '';
-            position: absolute;
-            left: 11px;
-            top: 24px;
-            width: 2px;
-            height: calc(100% - 10px);
-            background-color: var(--border-color);
-            transition: background-color 0.4s ease;
-        }
-
-        .timeline-item.completed:not(:last-child)::before {
-            background-color: var(--accent-green);
-        }
-
-        .timeline-item.active:not(:last-child)::before {
-            background: linear-gradient(to bottom, var(--accent-primary) 0%, var(--border-color) 100%);
-        }
+        .timeline-item.active { opacity: 1; border-color: var(--accent-primary); }
+        .timeline-item.completed { opacity: 1; border-color: var(--accent-green); }
 
         .timeline-icon {
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
+            background: var(--bg-sub);
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
-            z-index: 2;
-            margin-right: 1.25rem;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-            color: var(--text-dim);
-        }
-
-        .timeline-item.completed .timeline-icon {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            color: #ffffff;
-            box-shadow: 0 0 10px var(--accent-green-glow);
-        }
-
-        .timeline-item.active .timeline-icon {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: #ffffff;
-            box-shadow: 0 0 12px var(--accent-glow);
-            animation: pulse-icon 1.5s infinite alternate;
-        }
-
-        @keyframes pulse-icon {
-            from { box-shadow: 0 0 4px var(--accent-glow); }
-            to { box-shadow: 0 0 14px rgba(99, 102, 241, 0.8); }
-        }
-
-        .timeline-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .timeline-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: color 0.3s ease;
-        }
-
-        .timeline-item.completed .timeline-title {
-            color: var(--text-main);
-        }
-
-        .timeline-item.active .timeline-title {
-            color: var(--accent-primary);
             font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .timeline-time {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            font-family: 'Fira Code', monospace;
-        }
+        .timeline-item.completed .timeline-icon { background: var(--accent-green); color: #000; }
+        .timeline-item.active .timeline-icon { background: var(--accent-primary); }
 
-        .timeline-item.completed .timeline-time {
-            color: var(--text-muted);
-        }
+        .timeline-title { font-size: 0.75rem; font-weight: 700; color: var(--text-main); }
+        .timeline-time { font-size: 0.7rem; color: var(--text-muted); }
 
-        /* Progress Bar overlay for active step */
         .stage-timer-bar {
             width: 100%;
             height: 3px;
-            background: var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
-            margin-top: 0.4rem;
+            margin-top: 4px;
             overflow: hidden;
-            display: none;
         }
 
-        .timeline-item.active .stage-timer-bar {
-            display: block;
-        }
+        .stage-timer-progress { width: 0%; height: 100%; background: var(--accent-primary); transition: width 0.05s linear; }
 
-        .stage-timer-progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-green));
-            width: 0%;
-            transition: width 0.1s linear;
-        }
-
-        /* Demo Backend Status Box */
         .backend-status-box {
-            margin-top: 1.25rem;
-            background: var(--code-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 0.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
             padding: 0.75rem 1rem;
             font-family: 'Fira Code', monospace;
             font-size: 0.8rem;
@@ -604,250 +313,108 @@
 
         .backend-status-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            color: var(--text-dim);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: var(--text-muted);
             margin-bottom: 0.4rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 0.3rem;
-        }
-
-        .backend-log-line {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #a7f3d0;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .backend-log-line .timestamp {
-            color: var(--text-dim);
-        }
-
-        .backend-log-line .method {
-            color: #60a5fa;
             font-weight: 600;
         }
 
-        .backend-log-line .endpoint {
-            color: #f3f4f6;
-        }
-
-        .backend-log-line .status-code {
-            color: var(--accent-green);
-            font-weight: 600;
-        }
-
-        .worker-queue-note {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-top: 0.4rem;
-            color: #fcd34d;
-            font-size: 0.75rem;
-        }
-
-        .spinner {
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(245, 158, 11, 0.2);
-            border-top-color: var(--accent-amber);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Footer */
-        footer {
-            margin-top: auto;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            z-index: 100;
-        }
-
-        .toast {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.85rem 1.25rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.85rem;
-            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 360px;
-        }
-
-        .toast-success {
-            border-left: 4px solid var(--accent-green);
-        }
-
-        .toast-error {
-            border-left: 4px solid var(--accent-red);
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
+        footer { text-align: center; margin-top: 3rem; color: var(--text-muted); font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header -->
         <header>
             <div class="header-title-area">
-                <div class="badge-tag">
-                    <span class="pulse-dot"></span> Backend Pipeline Simulator
-                </div>
+                <span class="badge-tag">SIMULATION CONTROL</span>
                 <h1>Order Simulator</h1>
-                <p class="subtitle">Simulate an order lifecycle and watch notifications move through the backend.</p>
+                <p class="subtitle">Simulate real-time e-commerce orders and background notification dispatch.</p>
             </div>
-            <div>
-                <a href="/inbox" class="nav-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
-                    Open Notification Inbox
-                </a>
-            </div>
+            <a href="/inbox" class="nav-btn">
+                <span>View Inbox</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </a>
         </header>
 
-        <!-- Settings Section -->
+        <!-- Configuration Settings -->
         <section class="card">
             <div class="section-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                Lifecycle Delays Configuration
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Simulation Stage Delays
             </div>
-            <p style="color: var(--text-muted); font-size: 0.88rem;">
-                Adjust the stage delays below. These values control the time elapsed before sending the next status payload to the FastAPI backend queue.
-            </p>
-
             <div class="settings-grid">
                 <div class="setting-item">
-                    <div class="setting-label">
-                        <span>Dispatch Delay</span>
-                        <span class="setting-value" id="val-dispatch">3s</span>
-                    </div>
-                    <div class="setting-input-wrapper">
-                        <input type="number" id="dispatch-delay" class="setting-input" min="1" max="60" value="3" oninput="updateSettingVal('dispatch', this.value)">
-                    </div>
+                    <div class="setting-label"><span>Stage 2: Dispatched</span> <span class="setting-value" id="val-dispatch">3s</span></div>
+                    <input type="range" id="dispatch-delay" min="1" max="15" value="3" oninput="updateSettingVal('dispatch', this.value)">
                 </div>
-
                 <div class="setting-item">
-                    <div class="setting-label">
-                        <span>Out-for-delivery Delay</span>
-                        <span class="setting-value" id="val-out">5s</span>
-                    </div>
-                    <div class="setting-input-wrapper">
-                        <input type="number" id="out-delay" class="setting-input" min="1" max="60" value="5" oninput="updateSettingVal('out', this.value)">
-                    </div>
+                    <div class="setting-label"><span>Stage 3: Out for Delivery</span> <span class="setting-value" id="val-out">5s</span></div>
+                    <input type="range" id="out-delay" min="1" max="20" value="5" oninput="updateSettingVal('out', this.value)">
                 </div>
-
                 <div class="setting-item">
-                    <div class="setting-label">
-                        <span>Delivery Delay</span>
-                        <span class="setting-value" id="val-delivery">5s</span>
-                    </div>
-                    <div class="setting-input-wrapper">
-                        <input type="number" id="delivery-delay" class="setting-input" min="1" max="60" value="5" oninput="updateSettingVal('delivery', this.value)">
-                    </div>
+                    <div class="setting-label"><span>Stage 4: Delivered</span> <span class="setting-value" id="val-delivery">5s</span></div>
+                    <input type="range" id="delivery-delay" min="1" max="20" value="5" oninput="updateSettingVal('delivery', this.value)">
                 </div>
-            </div>
-
-            <div class="settings-info">
-                ℹ️ Each stage transition triggers a <code>POST /orders</code> call with updated <code>notification_type</code>. The backend worker asynchronously processes each event into storage.
             </div>
         </section>
 
         <!-- Product Catalog -->
-        <div class="section-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-            Available Demo Products
-        </div>
+        <div class="section-title">Products</div>
         <div class="products-grid">
-            <!-- Product 1 -->
             <div class="product-card">
                 <div>
-                    <div class="product-icon">💻</div>
-                    <div class="product-name">Laptop</div>
-                    <div class="product-desc">MacBook Pro M3 Max - High performance workstation.</div>
+                    <div class="product-icon-wrap">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <div class="product-name">Pro Laptop</div>
+                    <div class="product-desc">High-performance workstation with M-series processor.</div>
                 </div>
                 <div class="product-footer">
-                    <span class="product-price">$1,999</span>
-                    <button class="btn-order" onclick="triggerOrder('Laptop')">
-                        Place Order
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                    <span class="product-price">$1,499</span>
+                    <button class="btn-order" onclick="triggerOrder('Pro Laptop')">Place Order</button>
                 </div>
             </div>
 
-            <!-- Product 2 -->
             <div class="product-card">
                 <div>
-                    <div class="product-icon">📱</div>
+                    <div class="product-icon-wrap">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                    </div>
                     <div class="product-name">Smartphone</div>
-                    <div class="product-desc">Pro Phone 15 - Next-gen mobile device with neural chip.</div>
+                    <div class="product-desc">Pro Phone 15 with high resolution OLED display.</div>
                 </div>
                 <div class="product-footer">
                     <span class="product-price">$999</span>
-                    <button class="btn-order" onclick="triggerOrder('Smartphone')">
-                        Place Order
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                    <button class="btn-order" onclick="triggerOrder('Smartphone')">Place Order</button>
                 </div>
             </div>
 
-            <!-- Product 3 -->
             <div class="product-card">
                 <div>
-                    <div class="product-icon">🎧</div>
+                    <div class="product-icon-wrap">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                    </div>
                     <div class="product-name">Headphones</div>
-                    <div class="product-desc">Studio Wireless NC - Premium noise-canceling audio.</div>
+                    <div class="product-desc">Wireless noise-canceling studio headphones.</div>
                 </div>
                 <div class="product-footer">
                     <span class="product-price">$349</span>
-                    <button class="btn-order" onclick="triggerOrder('Headphones')">
-                        Place Order
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                    <button class="btn-order" onclick="triggerOrder('Headphones')">Place Order</button>
                 </div>
             </div>
 
-            <!-- Product 4 -->
             <div class="product-card">
                 <div>
-                    <div class="product-icon">⌨️</div>
+                    <div class="product-icon-wrap">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><line x1="6" y1="8" x2="6" y2="8"></line><line x1="10" y1="8" x2="10" y2="8"></line><line x1="14" y1="8" x2="14" y2="8"></line><line x1="18" y1="8" x2="18" y2="8"></line><line x1="6" y1="12" x2="6" y2="12"></line><line x1="10" y1="12" x2="10" y2="12"></line><line x1="14" y1="12" x2="14" y2="12"></line><line x1="18" y1="12" x2="18" y2="12"></line><line x1="8" y1="16" x2="16" y2="16"></line></svg>
+                    </div>
                     <div class="product-name">Mechanical Keyboard</div>
-                    <div class="product-desc">Custom RGB Mechanical - Hot-swappable tactile switches.</div>
+                    <div class="product-desc">Tactile mechanical keyboard with hot-swappable switches.</div>
                 </div>
                 <div class="product-footer">
                     <span class="product-price">$179</span>
-                    <button class="btn-order" onclick="triggerOrder('Mechanical Keyboard')">
-                        Place Order
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                    <button class="btn-order" onclick="triggerOrder('Mechanical Keyboard')">Place Order</button>
                 </div>
             </div>
         </div>
@@ -855,16 +422,12 @@
         <!-- Active Orders Section -->
         <section class="orders-section">
             <div class="orders-header">
-                <div class="section-title" style="margin-bottom:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                    Active Orders Pipeline
-                </div>
+                <div class="section-title" style="margin-bottom:0;">Active Orders Pipeline</div>
                 <div class="orders-count-badge" id="orders-count">0 Active</div>
             </div>
 
             <div id="orders-list" class="orders-container">
                 <div class="empty-orders" id="empty-orders-view">
-                    <div class="empty-orders-icon">📦</div>
                     <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No active orders simulated yet</p>
                     <p style="font-size: 0.85rem;">Click "Place Order" on any product above to start a live backend notification lifecycle.</p>
                 </div>
@@ -872,89 +435,53 @@
         </section>
     </div>
 
-    <!-- Toast Notifications Container -->
-    <div id="toast-container" class="toast-container"></div>
-
     <footer>
-        Order Simulator Demo &bull; Notification Service Backend Tester &bull; FastAPI + SQLite Queue
+        Order Simulator Demo &bull; Notification Service Backend Tester
     </footer>
 
     <script>
-        // Track settings values
         function updateSettingVal(type, val) {
             const el = document.getElementById(`val-${type}`);
             if (el) el.textContent = `${val}s`;
         }
 
-        // Global Toast alert
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            
-            const icon = type === 'success' ? '✅' : '⚠️';
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        // Format Date Time
         function getFormattedTime() {
             const now = new Date();
             return now.toTimeString().split(' ')[0] + '.' + String(now.getMilliseconds()).padStart(3, '0').slice(0, 2);
         }
 
-        // State storage for active orders
         const activeOrders = new Map();
 
-        // Trigger placement of a new order
         async function triggerOrder(productName) {
-            // Generate unique int product_id / order_id
             const orderId = Math.floor(1000 + Math.random() * 9000);
-            
-            // Fetch configuration delays (in seconds)
             const dispatchDelay = parseInt(document.getElementById('dispatch-delay').value) || 3;
             const outDelay = parseInt(document.getElementById('out-delay').value) || 5;
             const deliveryDelay = parseInt(document.getElementById('delivery-delay').value) || 5;
 
-            // Remove empty view if present
             const emptyView = document.getElementById('empty-orders-view');
             if (emptyView) emptyView.style.display = 'none';
 
-            // Create Order Card UI
             createOrderCardUI(orderId, productName);
             updateOrdersCount();
 
-            showToast(`Order #${orderId} created for ${productName}`);
-
-            // Start Lifecycle Simulation Sequence
             runOrderLifecycle(orderId, productName, { dispatchDelay, outDelay, deliveryDelay });
         }
 
         function updateOrdersCount() {
             const count = activeOrders.size;
             const badge = document.getElementById('orders-count');
-            if (badge) {
-                badge.textContent = `${count} Order${count !== 1 ? 's' : ''}`;
-            }
+            if (badge) badge.textContent = `${count} Order${count !== 1 ? 's' : ''}`;
         }
 
         function createOrderCardUI(orderId, productName) {
             const list = document.getElementById('orders-list');
             const card = document.createElement('div');
-            card.className = 'order-card active-processing';
+            card.className = 'order-card';
             card.id = `order-card-${orderId}`;
 
             card.innerHTML = `
                 <div class="order-card-header">
-                    <div class="order-meta-info">
+                    <div>
                         <div class="order-id-tag">ORDER #${orderId}</div>
                         <div class="order-product-name">Product: <strong>${productName}</strong></div>
                     </div>
@@ -964,68 +491,50 @@
                 </div>
 
                 <div class="timeline">
-                    <!-- Stage 1 -->
                     <div class="timeline-item active" id="stage-ORDER_PLACED-${orderId}">
                         <div class="timeline-icon">1</div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="timeline-title">ORDER PLACED</div>
-                                <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-ORDER_PLACED-${orderId}"></div></div>
-                            </div>
+                        <div>
+                            <div class="timeline-title">ORDER PLACED</div>
+                            <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-ORDER_PLACED-${orderId}"></div></div>
                             <div class="timeline-time" id="time-ORDER_PLACED-${orderId}">Pending...</div>
                         </div>
                     </div>
 
-                    <!-- Stage 2 -->
                     <div class="timeline-item" id="stage-DISPATCHED-${orderId}">
                         <div class="timeline-icon">2</div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="timeline-title">DISPATCHED</div>
-                                <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-DISPATCHED-${orderId}"></div></div>
-                            </div>
+                        <div>
+                            <div class="timeline-title">DISPATCHED</div>
+                            <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-DISPATCHED-${orderId}"></div></div>
                             <div class="timeline-time" id="time-DISPATCHED-${orderId}">Pending...</div>
                         </div>
                     </div>
 
-                    <!-- Stage 3 -->
                     <div class="timeline-item" id="stage-OUT_FOR_DELIVERY-${orderId}">
                         <div class="timeline-icon">3</div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="timeline-title">OUT FOR DELIVERY</div>
-                                <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-OUT_FOR_DELIVERY-${orderId}"></div></div>
-                            </div>
+                        <div>
+                            <div class="timeline-title">OUT FOR DELIVERY</div>
+                            <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-OUT_FOR_DELIVERY-${orderId}"></div></div>
                             <div class="timeline-time" id="time-OUT_FOR_DELIVERY-${orderId}">Pending...</div>
                         </div>
                     </div>
 
-                    <!-- Stage 4 -->
                     <div class="timeline-item" id="stage-DELIVERED-${orderId}">
                         <div class="timeline-icon">4</div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="timeline-title">DELIVERED</div>
-                                <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-DELIVERED-${orderId}"></div></div>
-                            </div>
+                        <div>
+                            <div class="timeline-title">DELIVERED</div>
+                            <div class="stage-timer-bar"><div class="stage-timer-progress" id="progress-DELIVERED-${orderId}"></div></div>
                             <div class="timeline-time" id="time-DELIVERED-${orderId}">Pending...</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Backend Status Box -->
                 <div class="backend-status-box">
                     <div class="backend-status-header">
-                        <span>Backend HTTP Trace & Queue Log</span>
+                        <span>HTTP Trace & Queue Log</span>
                         <span id="log-status-${orderId}">INITIALIZING...</span>
                     </div>
-                    <div class="backend-log-line" id="log-trace-${orderId}">
-                        <span class="timestamp">[${getFormattedTime()}]</span>
-                        <span style="color: var(--text-dim);">Preparing POST request to /orders...</span>
-                    </div>
-                    <div class="worker-queue-note" id="worker-note-${orderId}">
-                        <div class="spinner"></div>
-                        <span>Notification queued. Waiting for backend worker to pick up...</span>
+                    <div id="log-trace-${orderId}" style="color: var(--text-muted);">
+                        [${getFormattedTime()}] Preparing POST request to /orders...
                     </div>
                 </div>
             `;
@@ -1034,7 +543,6 @@
             activeOrders.set(orderId, { status: 'ORDER_PLACED', productName });
         }
 
-        // Helper to delay with animated progress bar
         function delayWithProgress(orderId, stageKey, seconds) {
             return new Promise((resolve) => {
                 const totalMs = seconds * 1000;
@@ -1045,9 +553,7 @@
                 const timer = setInterval(() => {
                     elapsedMs += intervalMs;
                     const percent = Math.min(100, (elapsedMs / totalMs) * 100);
-                    if (progressBar) {
-                        progressBar.style.width = `${percent}%`;
-                    }
+                    if (progressBar) progressBar.style.width = `${percent}%`;
 
                     if (elapsedMs >= totalMs) {
                         clearInterval(timer);
@@ -1057,47 +563,21 @@
             });
         }
 
-        // POST request to backend /orders
         async function sendNotification(orderId, productName, notificationType) {
-            const payload = {
-                product_id: parseInt(orderId),
-                product: productName,
-                notification_type: notificationType
-            };
-
+            const payload = { product_id: parseInt(orderId), product: productName, notification_type: notificationType };
             const logTraceEl = document.getElementById(`log-trace-${orderId}`);
             const logStatusEl = document.getElementById(`log-status-${orderId}`);
-
-            if (logTraceEl) {
-                logTraceEl.innerHTML = `
-                    <span class="timestamp">[${getFormattedTime()}]</span>
-                    <span class="method">POST</span>
-                    <span class="endpoint">/orders</span>
-                    <span style="color: var(--text-dim);">${JSON.stringify(payload)}</span>
-                `;
-            }
 
             try {
                 const response = await fetch('/orders', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 const data = await response.json();
 
                 if (response.ok && data.code === 200) {
-                    if (logTraceEl) {
-                        logTraceEl.innerHTML = `
-                            <span class="timestamp">[${getFormattedTime()}]</span>
-                            <span class="method">POST</span>
-                            <span class="endpoint">/orders</span>
-                            <span class="status-code">200 OK</span> &bull;
-                            <span style="color: var(--text-muted);">${data.message}</span>
-                        `;
-                    }
+                    if (logTraceEl) logTraceEl.textContent = `[${getFormattedTime()}] POST /orders 200 OK - ${data.message}`;
                     if (logStatusEl) {
                         logStatusEl.textContent = 'QUEUED SUCCESS';
                         logStatusEl.style.color = 'var(--accent-green)';
@@ -1107,15 +587,7 @@
                     throw new Error(data.message || `HTTP ${response.status}`);
                 }
             } catch (err) {
-                console.error(`Failed to send notification ${notificationType} for Order #${orderId}:`, err);
-                if (logTraceEl) {
-                    logTraceEl.innerHTML = `
-                        <span class="timestamp">[${getFormattedTime()}]</span>
-                        <span class="method">POST</span>
-                        <span class="endpoint">/orders</span>
-                        <span style="color: var(--accent-red); font-weight: 600;">ERROR: ${err.message}</span>
-                    `;
-                }
+                if (logTraceEl) logTraceEl.textContent = `[${getFormattedTime()}] POST /orders ERROR: ${err.message}`;
                 if (logStatusEl) {
                     logStatusEl.textContent = 'HTTP ERROR';
                     logStatusEl.style.color = 'var(--accent-red)';
@@ -1124,18 +596,16 @@
             }
         }
 
-        // Update UI stage visual state
         function setStageState(orderId, stageKey, state, timestampText = '') {
             const item = document.getElementById(`stage-${stageKey}-${orderId}`);
             const timeEl = document.getElementById(`time-${stageKey}-${orderId}`);
-
             if (!item) return;
 
             if (state === 'completed') {
                 item.classList.remove('active');
                 item.classList.add('completed');
                 const icon = item.querySelector('.timeline-icon');
-                if (icon) icon.innerHTML = '✓';
+                if (icon) icon.textContent = '✓';
                 if (timeEl && timestampText) timeEl.textContent = timestampText;
             } else if (state === 'active') {
                 item.classList.add('active');
@@ -1146,107 +616,45 @@
         function updateMainBadge(orderId, stageKey) {
             const badge = document.getElementById(`badge-${orderId}`);
             if (!badge) return;
-
             badge.className = 'order-status-badge';
             
             switch (stageKey) {
-                case 'ORDER_PLACED':
-                    badge.classList.add('status-placed');
-                    badge.textContent = 'ORDER PLACED';
-                    break;
-                case 'DISPATCHED':
-                    badge.classList.add('status-dispatched');
-                    badge.textContent = 'DISPATCHED';
-                    break;
-                case 'OUT_FOR_DELIVERY':
-                    badge.classList.add('status-out');
-                    badge.textContent = 'OUT FOR DELIVERY';
-                    break;
-                case 'DELIVERED':
-                    badge.classList.add('status-delivered');
-                    badge.textContent = 'DELIVERED';
-                    break;
-                case 'ERROR':
-                    badge.classList.add('status-error');
-                    badge.textContent = 'POST FAILED';
-                    break;
+                case 'ORDER_PLACED': badge.classList.add('status-placed'); badge.textContent = 'ORDER PLACED'; break;
+                case 'DISPATCHED': badge.classList.add('status-dispatched'); badge.textContent = 'DISPATCHED'; break;
+                case 'OUT_FOR_DELIVERY': badge.classList.add('status-out'); badge.textContent = 'OUT FOR DELIVERY'; break;
+                case 'DELIVERED': badge.classList.add('status-delivered'); badge.textContent = 'DELIVERED'; break;
+                case 'ERROR': badge.classList.add('status-error'); badge.textContent = 'POST FAILED'; break;
             }
         }
 
-        // Main lifecycle runner
         async function runOrderLifecycle(orderId, productName, delays) {
-            // Stage 1: ORDER_PLACED (Immediate)
             setStageState(orderId, 'ORDER_PLACED', 'active');
             updateMainBadge(orderId, 'ORDER_PLACED');
 
-            const success1 = await sendNotification(orderId, productName, 'ORDER_PLACED');
-            if (!success1) {
-                updateMainBadge(orderId, 'ERROR');
-                showToast(`Failed to dispatch ORDER_PLACED for #${orderId}`, 'error');
-                return;
-            }
-
+            const ok1 = await sendNotification(orderId, productName, 'ORDER_PLACED');
+            if (!ok1) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'ORDER_PLACED', 'completed', getFormattedTime());
 
-            // Stage 2: DISPATCHED (After dispatchDelay)
             setStageState(orderId, 'DISPATCHED', 'active');
-            updateMainBadge(orderId, 'ORDER_PLACED'); // overall remains placed until dispatched succeeds
             await delayWithProgress(orderId, 'DISPATCHED', delays.dispatchDelay);
-
-            const success2 = await sendNotification(orderId, productName, 'DISPATCHED');
-            if (!success2) {
-                updateMainBadge(orderId, 'ERROR');
-                showToast(`Failed to send DISPATCHED stage for #${orderId}`, 'error');
-                return;
-            }
-
+            const ok2 = await sendNotification(orderId, productName, 'DISPATCHED');
+            if (!ok2) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'DISPATCHED', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'DISPATCHED');
-            showToast(`Order #${orderId} Dispatched!`);
 
-            // Stage 3: OUT_FOR_DELIVERY (After outDelay)
             setStageState(orderId, 'OUT_FOR_DELIVERY', 'active');
             await delayWithProgress(orderId, 'OUT_FOR_DELIVERY', delays.outDelay);
-
-            const success3 = await sendNotification(orderId, productName, 'OUT_FOR_DELIVERY');
-            if (!success3) {
-                updateMainBadge(orderId, 'ERROR');
-                showToast(`Failed to send OUT_FOR_DELIVERY for #${orderId}`, 'error');
-                return;
-            }
-
+            const ok3 = await sendNotification(orderId, productName, 'OUT_FOR_DELIVERY');
+            if (!ok3) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'OUT_FOR_DELIVERY', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'OUT_FOR_DELIVERY');
-            showToast(`Order #${orderId} is Out For Delivery!`);
 
-            // Stage 4: DELIVERED (After deliveryDelay)
             setStageState(orderId, 'DELIVERED', 'active');
             await delayWithProgress(orderId, 'DELIVERED', delays.deliveryDelay);
-
-            const success4 = await sendNotification(orderId, productName, 'DELIVERED');
-            if (!success4) {
-                updateMainBadge(orderId, 'ERROR');
-                showToast(`Failed to send DELIVERED stage for #${orderId}`, 'error');
-                return;
-            }
-
+            const ok4 = await sendNotification(orderId, productName, 'DELIVERED');
+            if (!ok4) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'DELIVERED', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'DELIVERED');
-            showToast(`Order #${orderId} Delivered successfully! 🎉`);
-
-            // Mark card as fully completed
-            const card = document.getElementById(`order-card-${orderId}`);
-            if (card) {
-                card.classList.remove('active-processing');
-                card.classList.add('completed');
-            }
-
-            const workerNote = document.getElementById(`worker-note-${orderId}`);
-            if (workerNote) {
-                workerNote.innerHTML = `
-                    <span style="color: var(--accent-green)">✓ All stage notification events queued and processed by backend pipeline.</span>
-                `;
-            }
         }
     </script>
 </body>

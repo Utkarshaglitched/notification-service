@@ -6,8 +6,8 @@ def add_into(que):
     session=get_session()
     try:
         dat=NotificationQueue(
-            order_id=que.product_id,
-            product=que.product,
+            order_id=que.order_id,
+            product=que.order,
             notification_type=que.notification_type,
             created_at=datetime.utcnow(),
             status="pending",
@@ -18,8 +18,9 @@ def add_into(que):
         session.commit()
 
         return True
-    except:
+    except Exception as e:
         session.rollback()
+        print("DATABASE ERROR",e)
         return False
     finally:
         session.close()
@@ -89,20 +90,29 @@ def read_one():
 def read_all(id):
     session=get_session()
     try:
-        cmd=select(NotificationQueue).where((NotificationQueue.id==id)&(NotificationQueue.status=="sent")).limit(1)
+        cmd=select(NotificationQueue).where(
+            (NotificationQueue.order_id==id) &
+            (NotificationQueue.status=="sent")
+        )
 
         res=session.execute(cmd)
-        fnd=res.scalar_one_or_none()
+        fnd=res.scalars().all()
 
-        if fnd is not None:
+        if fnd:
 
             return {
-                "id":fnd.id,
-                "order_id":fnd.order_id,
-                "product":fnd.product,
-                "msg":fnd.msg,
+                "notifications": [
+                    {
+                        "id":notification.id,
+                        "order_id":notification.order_id,
+                        "product":notification.product,
+                        "msg":notification.msg
+                    }
+                    for notification in fnd
+                ],
                 "code":200
             }
+
         return{
             "code":400  
         }
@@ -178,5 +188,3 @@ def modify_sms(id,sms):
 
     finally:
         session.close()
-
-

@@ -26,3 +26,5 @@ class NotificationQueue(Base):
     created_at: Mapped[datetime] = mapped_column()
     status: Mapped[str] = mapped_column()
     msg:Mapped[str]=mapped_column()
+
+Base.metadata.create_all(engine)

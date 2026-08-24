@@ -3,8 +3,8 @@ from fastapi.templating import Jinja2Templates
 from models import orders,notification
 from db_methods.database_handler import read_all
 
-app=FastAPI()
 
+app=FastAPI()
 templates=Jinja2Templates(directory="simulation")
 
 @app.get("/")
@@ -50,15 +50,6 @@ def handel_notification(id:str):
 
     res=read_all(id)
 
-    if res.get("code")==200:
-        return {
-            "messaage": res.get("msg"),
-            "code":200
-        }
-    else:
-        return {
-            "message":"There is some issue",
-            "code":400
-        }
+    return res
 
 
