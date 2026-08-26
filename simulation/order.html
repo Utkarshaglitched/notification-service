@@ -545,10 +545,15 @@
 
         function delayWithProgress(orderId, stageKey, seconds) {
             return new Promise((resolve) => {
-                const totalMs = seconds * 1000;
+                const totalMs = (seconds || 0) * 1000;
+                const progressBar = document.getElementById(`progress-${stageKey}-${orderId}`);
+                if (totalMs <= 0) {
+                    if (progressBar) progressBar.style.width = '100%';
+                    resolve();
+                    return;
+                }
                 const intervalMs = 50;
                 let elapsedMs = 0;
-                const progressBar = document.getElementById(`progress-${stageKey}-${orderId}`);
 
                 const timer = setInterval(() => {
                     elapsedMs += intervalMs;
@@ -565,6 +570,7 @@
 
         async function sendNotification(orderId, productName, notificationType) {
             const payload = { product_id: parseInt(orderId), product: productName, notification_type: notificationType };
+            console.log("SENDING NOTIFICATION:", payload);
             const logTraceEl = document.getElementById(`log-trace-${orderId}`);
             const logStatusEl = document.getElementById(`log-status-${orderId}`);
 
@@ -575,6 +581,7 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await response.json();
+                console.log("NOTIFICATION RESPONSE:", notificationType, response.status, data);
 
                 if (response.ok && data.code === 200) {
                     if (logTraceEl) logTraceEl.textContent = `[${getFormattedTime()}] POST /orders 200 OK - ${data.message}`;
@@ -628,30 +635,41 @@
         }
 
         async function runOrderLifecycle(orderId, productName, delays) {
+            console.log("STAGE 1: ORDER_PLACED");
             setStageState(orderId, 'ORDER_PLACED', 'active');
             updateMainBadge(orderId, 'ORDER_PLACED');
 
             const ok1 = await sendNotification(orderId, productName, 'ORDER_PLACED');
+            console.log("STAGE 1 RESULT:", ok1);
             if (!ok1) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'ORDER_PLACED', 'completed', getFormattedTime());
 
+            console.log("WAITING FOR DISPATCHED");
             setStageState(orderId, 'DISPATCHED', 'active');
             await delayWithProgress(orderId, 'DISPATCHED', delays.dispatchDelay);
+            console.log("STAGE 2: DISPATCHED");
             const ok2 = await sendNotification(orderId, productName, 'DISPATCHED');
+            console.log("STAGE 2 RESULT:", ok2);
             if (!ok2) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'DISPATCHED', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'DISPATCHED');
 
+            console.log("WAITING FOR OUT_FOR_DELIVERY");
             setStageState(orderId, 'OUT_FOR_DELIVERY', 'active');
             await delayWithProgress(orderId, 'OUT_FOR_DELIVERY', delays.outDelay);
+            console.log("STAGE 3: OUT_FOR_DELIVERY");
             const ok3 = await sendNotification(orderId, productName, 'OUT_FOR_DELIVERY');
+            console.log("STAGE 3 RESULT:", ok3);
             if (!ok3) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'OUT_FOR_DELIVERY', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'OUT_FOR_DELIVERY');
 
+            console.log("WAITING FOR DELIVERED");
             setStageState(orderId, 'DELIVERED', 'active');
             await delayWithProgress(orderId, 'DELIVERED', delays.deliveryDelay);
+            console.log("STAGE 4: DELIVERED");
             const ok4 = await sendNotification(orderId, productName, 'DELIVERED');
+            console.log("STAGE 4 RESULT:", ok4);
             if (!ok4) { updateMainBadge(orderId, 'ERROR'); return; }
             setStageState(orderId, 'DELIVERED', 'completed', getFormattedTime());
             updateMainBadge(orderId, 'DELIVERED');

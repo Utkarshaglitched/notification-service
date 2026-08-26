@@ -250,6 +250,7 @@
     <script>
         let currentOrderId = null;
         let pollIntervalId = null;
+        let isFetching = false;
         const displayedNotificationIds = new Set();
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -290,54 +291,77 @@
             currentOrderId = orderId;
             displayedNotificationIds.clear();
 
-            if (pollIntervalId) clearInterval(pollIntervalId);
+            if (pollIntervalId) {
+                clearInterval(pollIntervalId);
+            }
 
             const container = document.getElementById('inbox-container');
             container.innerHTML = `<div id="empty-state" class="empty-state">Waiting for notifications...</div>`;
 
             fetchNotifications();
-            pollIntervalId = setInterval(fetchNotifications, 2000);
+
+            pollIntervalId = setInterval(fetchNotifications, 1000);
         }
 
         async function fetchNotifications() {
             if (!currentOrderId) return;
 
+            if (isFetching) return;
+
+            isFetching = true;
+
             try {
-                const response = await fetch(`/notification/${currentOrderId}`);
+                const response = await fetch(
+                    `/notification/${currentOrderId}?t=${Date.now()}`,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
                 if (!response.ok) return;
 
                 const data = await response.json();
+
                 if (!data || data.code !== 200) return;
 
-                let notifications = [];
-                if (data.notifications && Array.isArray(data.notifications)) {
-                    notifications = data.notifications;
-                } else if (Array.isArray(data)) {
-                    notifications = data;
-                } else if (data.id || data.msg || data.messaage) {
-                    notifications = [data];
-                }
+                console.log("POLL RESPONSE:", data);
+                console.log(
+                    "NOTIFICATION IDS FROM SERVER:",
+                    data.notifications?.map(n => n.id)
+                );
+                console.log(
+                    "ALREADY DISPLAYED IDS:",
+                    [...displayedNotificationIds]
+                );
 
-                if (notifications.length === 0) return;
+                const notifications =
+                    Array.isArray(data.notifications)
+                        ? data.notifications
+                        : [];
 
-                let hasNew = false;
                 notifications.forEach(item => {
-                    const idKey = item.id !== undefined && item.id !== null ? item.id : `msg-${item.order_id || currentOrderId}-${item.msg || item.messaage}`;
-                    
-                    if (!displayedNotificationIds.has(idKey)) {
-                        displayedNotificationIds.add(idKey);
+
+                    if (item.id === undefined || item.id === null) {
+                        return;
+                    }
+
+                    if (!displayedNotificationIds.has(item.id)) {
+                        displayedNotificationIds.add(item.id);
+
                         renderNotificationCard(item);
-                        hasNew = true;
 
                         const notifType = detectNotificationType(item);
-                        showToast(`New Notification: [${notifType.replace(/_/g, ' ')}] for Order #${item.order_id || currentOrderId}`);
+
+                        showToast(
+                            `New Notification: [${notifType.replace(/_/g, ' ')}] for Order #${item.order_id || currentOrderId}`
+                        );
                     }
                 });
 
-                if (hasNew) hideEmptyState();
-
             } catch (err) {
                 console.error("Error fetching notifications:", err);
+            } finally {
+                isFetching = false;
             }
         }
 
@@ -348,7 +372,7 @@
 
         function detectNotificationType(item) {
             if (item.notification_type) return item.notification_type;
-            const msg = (item.msg || item.message || item.messaage || '').toLowerCase();
+            const msg = (item.msg || '').toLowerCase();
             if (msg.includes('out for delivery') || msg.includes('out_for_delivery')) return 'OUT_FOR_DELIVERY';
             if (msg.includes('dispatch') || msg.includes('dispatched')) return 'DISPATCHED';
             if (msg.includes('delivered')) return 'DELIVERED';
@@ -361,7 +385,7 @@
 
             const container = document.getElementById('inbox-container');
             const notifType = detectNotificationType(item);
-            const msg = item.msg || item.message || item.messaage || '';
+            const msg = item.msg || '';
             const product = item.product || 'N/A';
             const orderId = item.order_id || currentOrderId;
             const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });

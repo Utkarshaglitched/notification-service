@@ -1,9 +1,9 @@
 import time
-from workers.worker import even_manager
+from workers.worker import create_workers
 
+
+create_workers()
 
 while True:
-    even_manager()
-    print("Workers working!!")
-    time.sleep(5)
-    
+    print("worker working!!")
+    time.sleep(1)
