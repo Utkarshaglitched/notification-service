@@ -37,31 +37,31 @@ The following diagram illustrates the end-to-end flow of notifications from even
 ```mermaid
 flowchart TD
     subgraph Frontend["Demonstration Frontend"]
-        Simulator["Order Simulator\n(simulation/order.html)"]
-        Inbox["Simulated Inbox\n(simulation/inbox.html)"]
+        Simulator["Order Simulator<br/>(simulation/order.html)"]
+        Inbox["Simulated Inbox<br/>(simulation/inbox.html)"]
     end
 
     subgraph Backend["FastAPI Backend (main.py)"]
         API_Orders["POST /orders"]
-        API_Notif["GET /notification/{id}"]
+        API_Notif["GET /notification/order_id"]
     end
 
     subgraph Database["PostgreSQL Storage"]
-        DBQueue[("Notification Queue Table\n(notification_queue)")]
+        DBQueue[("Notification Queue Table<br/>(notification_queue)")]
     end
 
     subgraph WorkerService["Worker Engine (workers/)"]
-        WorkerThread["Background Worker Thread\n(worker.py / events.py)"]
+        WorkerThread["Background Worker Thread<br/>(worker.py / events.py)"]
     end
 
-    Simulator -->|1. Trigger Stage Event| API_Orders
-    API_Orders -->|2. Insert status='pending'| DBQueue
-    WorkerThread -->|3. Read status='pending'| DBQueue
-    WorkerThread -->|4. Update status='processing'| DBQueue
-    WorkerThread -->|5. Generate text & status='sent'| DBQueue
-    Inbox -->|6. Poll GET /notification/{id}| API_Notif
-    API_Notif -->|7. Fetch status='sent' records| DBQueue
-    API_Notif -->|8. Return JSON payload| Inbox
+    Simulator -->|"1. Trigger Stage Event"| API_Orders
+    API_Orders -->|"2. Insert status='pending'"| DBQueue
+    WorkerThread -->|"3. Read status='pending'"| DBQueue
+    WorkerThread -->|"4. Update status='processing'"| DBQueue
+    WorkerThread -->|"5. Generate text & status='sent'"| DBQueue
+    Inbox -->|"6. Poll GET /notification/order_id"| API_Notif
+    API_Notif -->|"7. Fetch status='sent' records"| DBQueue
+    API_Notif -->|"8. Return JSON payload"| Inbox
 ```
 
 ### Component Breakdown
